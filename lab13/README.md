@@ -291,5 +291,13 @@ By completing this lab I learned:
 
 Successfully deployed and managed labeled Pods, created a Custom Resource Definition (CRD), created multiple Greeting custom resources, validated schema enforcement, and used selectors across both native and custom Kubernetes objects.
 
-Author:
-Babajide Ajisafe
+
+Created By:
+
+**Babajide Ajisafe**
+Cloud | DevOps | Kubernetes Engineer
+
+GitHub: https://github.com/bojide
+Email: jideajisafe@gmail.com
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using modern DevOps and Kubernetes technologies.
