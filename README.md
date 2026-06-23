@@ -10,4 +10,12 @@ Personal Kubernetes learning repository.
 - Lab 15
 - Lab 16
 
-Author: Babajide Ajisafe
+Created By:
+
+**Babajide Ajisafe**
+Cloud | DevOps | Kubernetes Engineer
+
+GitHub: https://github.com/bojide
+Email: jideajisafe@gmail.com
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using modern DevOps and Kubernetes technologies.
