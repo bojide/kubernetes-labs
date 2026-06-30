@@ -24,7 +24,7 @@ kubectl describe pod qos-besteffort
 
 ### Result
 
-![BestEffort QoS](images/qos-BestEffort.jpg)
+![BestEffort QoS](./images/qos-besteffort.jpg)
 
 ### Observation
 
@@ -47,7 +47,8 @@ kubectl describe pod qos-burstable
 
 ### Result
 
-![Burstable QoS](images/qos-burstable.png)
+![Burstable QoS](./images/qos-burstable.jpg)
+
 
 ### Observation
 
@@ -70,7 +71,7 @@ kubectl describe pod qos-guaranteed
 
 ### Result
 
-![Guaranteed QoS](images/qos-guaranteed.png)
+![Guaranteed QoS](./images/qos-guaranteed.jpg)
 
 ### Observation
 
