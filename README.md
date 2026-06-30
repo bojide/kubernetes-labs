@@ -1,6 +1,6 @@
 # Kubernetes Labs
 
-Personal Kubernetes learning repository.
+Hands-on Kubernetes labs covering Pods, Deployments, Services, ConfigMaps, Secrets, Networking, Storage, and production best practices.
 
 ## Labs
 
