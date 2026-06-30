@@ -298,6 +298,6 @@ Created By:
 Cloud | DevOps | Kubernetes Engineer
 
 GitHub: https://github.com/bojide
-Email: jideajisafe@gmail.com
+Linkedin: https://linkedin.com/in/babajide-ajisafe
 
 Passionate about designing, automating, and managing scalable cloud-native infrastructure using modern DevOps and Kubernetes technologies.
