@@ -79,12 +79,52 @@ kubectl describe pod qos-guaranteed
 - Requests equal limits
 - Highest scheduling priority
 - Last pod to be evicted
- ## What I Learned
+
+
+## Pod Lifecycle
+
+A short-lived pod was deployed to observe the normal Kubernetes pod lifecycle.
+
+## Command
+kubectl get pod short-lived -w
+
+Result
+Completed
+
+## Verify Logs
+
+kubectl logs short-lived
+
+
+## Output
+
+Running for 10 seconds
+Done
+
+## Verify Pod Phase
+
+kubectl get pod short-lived -o jsonpath='{.status.phase}{"\n"}'
+
+
+### Output
+
+Succeeded
+
+## Observation
+ - The container started successfully.
+The application completed normally.
+Exit code was 0.
+Because restartPolicy: Never was configured, Kubernetes did not restart the pod.
+The final Pod Phase was Succeeded.
+
+
+## What I Learned
 
 - Learned how Kubernetes assigns QoS classes.
 - Used `kubectl describe` to inspect pod resource allocation.
 - Compared BestEffort, Burstable and Guaranteed pods.
 - Understood Kubernetes eviction priority during memory pressure.
+
 
  Author: 
 **Babajide Ajisafe** 
