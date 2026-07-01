@@ -123,7 +123,7 @@ This pod demonstrates how Kubernetes uses Startup, Readiness, and Liveness probe
 
 ### Command
 
-```bash
+
 kubectl describe pod probes-demo (result below)
 
 ![Pod Probes](images/pod-probes.jpg)
