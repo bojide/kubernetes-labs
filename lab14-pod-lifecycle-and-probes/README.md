@@ -143,6 +143,22 @@ kubectl describe pod probes-demo (result below)
 - Understood Kubernetes eviction priority during memory pressure.
 
 
+## Skills Demonstrated
+
+- Kubernetes Pods
+- Pod Lifecycle
+- Startup Probes
+- Readiness Probes
+- Liveness Probes
+- Init Containers
+- QoS Classes
+- Resource Requests and Limits
+- CrashLoopBackOff Troubleshooting
+- kubectl describe
+- kubectl logs
+- Kubernetes Event Analysis
+- Pod Status Inspection
+
  Author: 
 **Babajide Ajisafe** 
 - GitHub: https://github.com/bojide 
