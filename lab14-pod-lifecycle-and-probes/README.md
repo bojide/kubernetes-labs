@@ -117,6 +117,23 @@ Succeeded
  - Because restartPolicy: Never was configured, Kubernetes did not restart the pod.
  - The final Pod Phase was Succeeded.
 
+## Probes: Startup, Readiness, and Liveness
+
+This pod demonstrates how Kubernetes uses Startup, Readiness, and Liveness probes to monitor application health.
+
+### Command
+
+```bash
+kubectl describe pod probes-demo (result below)
+
+![Pod Probes](images/pod-probes.jpg)
+
+
+### Observation
+- Startup probe checks whether the application has started successfully.
+- Readiness probe controls whether the pod can receive traffic.
+- Liveness probe determines whether Kubernetes should restart the container.
+- Restart Count remained 0, confirming all probes passed successfully.
 
 ### What I Learned
 
