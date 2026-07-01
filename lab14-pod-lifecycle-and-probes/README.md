@@ -85,23 +85,23 @@ kubectl describe pod qos-guaranteed
 
 A short-lived pod was deployed to observe the normal Kubernetes pod lifecycle.
 
-## Command
+### Command
 kubectl get pod short-lived -w
 
 Result
 Completed
 
-## Verify Logs
+### Verify Logs
 
 kubectl logs short-lived
 
 
-## Output
+### Output
 
 Running for 10 seconds
 Done
 
-## Verify Pod Phase
+### Verify Pod Phase
 
 kubectl get pod short-lived -o jsonpath='{.status.phase}{"\n"}'
 
@@ -110,15 +110,15 @@ kubectl get pod short-lived -o jsonpath='{.status.phase}{"\n"}'
 
 Succeeded
 
-## Observation
+### Observation
  - The container started successfully.
-The application completed normally.
-Exit code was 0.
-Because restartPolicy: Never was configured, Kubernetes did not restart the pod.
-The final Pod Phase was Succeeded.
+ - The application completed normally.
+ - Exit code was 0.
+ - Because restartPolicy: Never was configured, Kubernetes did not restart the pod.
+ - The final Pod Phase was Succeeded.
 
 
-## What I Learned
+### What I Learned
 
 - Learned how Kubernetes assigns QoS classes.
 - Used `kubectl describe` to inspect pod resource allocation.
@@ -128,6 +128,6 @@ The final Pod Phase was Succeeded.
 
  Author: 
 **Babajide Ajisafe** 
-GitHub: https://github.com/bojide 
-LinkedIn: https://linkedin.com/in/babajide-ajisafe
+- GitHub: https://github.com/bojide 
+- LinkedIn: https://linkedin.com/in/babajide-ajisafe
 
