@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: generated-pod
+  name: generated-pod
+spec:
+  containers:
+  - image: busybox:1.36
+    name: generated-pod
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

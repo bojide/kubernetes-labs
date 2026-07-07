@@ -15,7 +15,7 @@ metadata:
 
   # Namespace determines which "virtual cluster" this pod lives in.
   # Omitting it uses the namespace your current context points to (usually "default").
-  namespace: default
+  namespace:
 
   # Labels are arbitrary key-value pairs attached to the object.
   # They are the primary mechanism for selecting, filtering, and grouping resources.

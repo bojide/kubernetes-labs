@@ -1,322 +1,227 @@
-# Lab 12: kubectl Essentials -  Kubernetes Lab 12
+# Objectives
 
-## Overview
+- Deploy a Pod using a YAML manifest
+- Monitor Pod creation
+- Inspect Kubernetes resources
+- Understand Labels and Annotations
+- View Pod details
+- Retrieve logs
+- Execute commands inside containers
+- Access applications using Port Forwarding
+- Generate Kubernetes manifests
+- Work with Namespaces
+- Verify Pod scheduling
+- Clean up Kubernetes resources
 
-This lab focused on mastering the Kubernetes command-line tool (**kubectl**) by deploying and managing an NGINX pod within a Kubernetes cluster.
+## 1. Deploying a Pod
 
-The goal was to gain hands-on experience with resource creation, inspection, troubleshooting, log analysis, namespace management, port forwarding, and Kubernetes API exploration.
-
----
-
-## Technologies Used
-
-* Kubernetes
-* kubectl
-* NGINX
-* YAML
-* K3s Cluster
-
----
-
-## Learning Objectives
-
-* Deploy workloads using Kubernetes manifests
-* Inspect and troubleshoot Kubernetes resources
-* View and analyze container logs
-* Execute commands inside running containers
-* Access applications through port forwarding
-* Work with namespaces and contexts
-* Generate Kubernetes YAML manifests
-* Explore Kubernetes API schemas
-
----
-
-# Part 1: Pod Deployment
-
-## Create the Pod
-
-Applied a Kubernetes manifest to deploy an NGINX pod.
+Created an NGINX Pod using a Kubernetes manifest.
 
 ```bash
 kubectl apply -f sample-nginx.yaml
 ```
 
-## Verify Pod Status
+Verified the Pod was successfully created.
 
 ```bash
 kubectl get pods
-kubectl get pods -o wide
 ```
 
-**Skills Learned**
+### Screenshot
 
-* Deploying workloads
-* Verifying pod health
-* Viewing scheduling information
+![Pod Created](screenshots/01-pod-created.png)
 
----
 
-# Part 2: Resource Inspection
+## 2. Watching Pod Creation
 
-## Inspect Pod Details
+Used the watch flag to monitor the Pod lifecycle.
+
+```bash
+kubectl get pod sample-nginx -w
+```
+
+Although my image was already cached, Kubernetes immediately transitioned to the **Running** state.
+
+### Screenshot
+
+![Watching Pod Status](screenshots/02-watch-pod-running.png)
+
+
+## 3. Inspecting Resources
+
+Used the describe command to inspect every aspect of the Pod.
 
 ```bash
 kubectl describe pod sample-nginx
 ```
 
-## View Labels
+This command reveals:
+
+- Labels
+- Annotations
+- Node
+- Pod IP
+- Resource Limits
+- Resource Requests
+- Environment Variables
+- Mounted Volumes
+- Events
+
+### Screenshot
+
+![Describe Pod](screenshots/03-describe-pod.png)
+
+
+## 4. Understanding Scheduling
+
+The Kubernetes Scheduler automatically selected an available Worker Node.
 
 ```bash
-kubectl get pods --show-labels
+kubectl describe pod sample-nginx
 ```
 
-## Filter Resources by Label
+Notice the Pod was scheduled on **jide-worker3** instead of either control plane node.
 
-```bash
-kubectl get pods -l app=sample-nginx
-```
+### Screenshot
 
-**Skills Learned**
+![Worker Node Scheduling](screenshots/04-worker-node-scheduling.png)
 
-* Understanding pod metadata
-* Reading events and conditions
-* Identifying node placement
 
----
-
-# Part 3: Output Formatting
-
-## View Resources as YAML
-
-```bash
-kubectl get pod sample-nginx -o yaml
-```
-
-## View Resources as JSON
-
-```bash
-kubectl get pod sample-nginx -o json
-```
-
-## Extract Specific Fields Using JSONPath
-
-### Pod Status
-
-```bash
-kubectl get pod sample-nginx -o jsonpath='{.status.phase}'
-```
-
-### Node Name
-
-```bash
-kubectl get pod sample-nginx -o jsonpath='{.spec.nodeName}'
-```
-
-### Container Image
-
-```bash
-kubectl get pod sample-nginx -o jsonpath='{.spec.containers[0].image}'
-```
-
-### Container Name
-
-```bash
-kubectl get pod sample-nginx -o jsonpath='{.spec.containers[*].name}'
-```
-
-### Pod IP Address
-
-```bash
-kubectl get pod sample-nginx -o jsonpath='{.status.podIP}{"\n"}'
-```
-
-**Skills Learned**
-
-* Kubernetes object structure
-* JSONPath querying
-* Data extraction from API responses
-
----
-
-# Part 4: Logs
-
-## View Container Logs
+## 6. Viewing Logs
 
 ```bash
 kubectl logs sample-nginx
 ```
 
-## View Recent Logs
-
 ```bash
-kubectl logs sample-nginx --tail=20
+kubectl logs sample-nginx --tail=40
 ```
 
-## View Logs with Timestamps
-
 ```bash
-kubectl logs sample-nginx --timestamps=true
+kubectl logs sample-nginx --since=5m
 ```
 
-**Skills Learned**
+### Screenshot
 
-* Reading application logs
-* Troubleshooting containers
-* Monitoring application startup
+![Pod Logs](screenshots/05-pod-logs.png)
 
----
 
-# Part 5: Port Forwarding
-
-## Create Local Tunnel
+## 8. Port Forwarding
 
 ```bash
 kubectl port-forward pod/sample-nginx 8080:80
 ```
 
-## Test Connectivity
+Opened a browser and verified the default NGINX page.
 
-```bash
-curl http://localhost:8080
-```
+### Terminal
 
-Successfully accessed the NGINX welcome page through the Kubernetes API server.
+![Port Forward](screenshots/06-port-forwarding.png)
 
-**Skills Learned**
+### Browser
 
-* Port forwarding
-* Application testing
-* Network connectivity validation
+![NGINX Browser](screenshots/07-nginx-browser.png)
 
----
 
-# Part 6: Running Commands Inside Containers
+## 10. Working with Namespaces
 
-## Check NGINX Version
-
-```bash
-kubectl exec sample-nginx -- nginx -v
-```
-
-## View NGINX Configuration
-
-```bash
-kubectl exec sample-nginx -- cat /etc/nginx/nginx.conf
-```
-
-**Skills Learned**
-
-* Container inspection
-* Command execution inside pods
-* Application configuration review
-
----
-
-# Part 7: Namespace Management
-
-## Create Namespace
+Created a dedicated namespace.
 
 ```bash
 kubectl create namespace lab12-practice
 ```
 
-## Deploy into Namespace
+Verified the namespace.
+
+### Screenshot
+
+![Namespace Created](screenshots/08-create-namespace.png)
+
+
+Applied the Pod to the namespace.
 
 ```bash
 kubectl apply -f sample-nginx.yaml -n lab12-practice
 ```
 
-## Verify Resources
+Verified the Pod.
 
 ```bash
 kubectl get pods -n lab12-practice
 ```
 
-## Configure Default Namespace
+### Screenshot
+
+![Pod in Namespace](screenshots/09-pod-in-namespace.png)
+
+
+
+## 11. Labels and Annotations
+
+Queried Pods using Labels.
 
 ```bash
-kubectl config set-context --current --namespace=lab12-practice
+kubectl get pods -l lab=12-kubectl
 ```
 
-**Skills Learned**
+### Screenshot
 
-* Namespace isolation
-* Multi-environment management
-* Context configuration
+![Labels and Annotations](screenshots/10-labels-annotations.png)
+
+
+
+The following screenshots demonstrate each major milestone throughout the lab.
 
 ---
 
-# Part 8: Kubernetes API Discovery
+# Key Concepts:
 
-## Explore Resource Documentation
-
-```bash
-kubectl explain pod
-kubectl explain pod.spec
-kubectl explain pod.status
-```
-
-**Skills Learned**
-
-* Self-service Kubernetes documentation
-* Resource schema exploration
-* Understanding Kubernetes objects
-
----
-
-# Part 9: Labels and Annotations
-
-## View Existing Labels
-
-```bash
-kubectl get pod sample-nginx --show-labels
-```
-
-## Inspect Annotations
-
-```bash
-kubectl describe pod sample-nginx
-```
-
-**Skills Learned**
-
-* Resource organization
-* Metadata management
-* Label-based filtering
-
----
-
-# Key Concepts Learned
-
-* Kubernetes Pods
-* kubectl Administration
-* YAML Manifests
-* Labels and Annotations
-* Namespaces
-* Port Forwarding
-* Logs and Troubleshooting
-* JSONPath Queries
-* Container Inspection
-* Kubernetes API Exploration
-* Context Management
-
----
-
-# Outcome
-
-Successfully deployed, inspected, managed, and troubleshot Kubernetes workloads using kubectl while gaining practical hands-on experience with the most commonly used Kubernetes operational commands.
-
-This lab strengthened foundational Kubernetes administration skills required for DevOps, Cloud, Platform Engineering, and Site Reliability Engineering (SRE) roles.
-
-
-Learning Objectives:
-
-- Pods
+- Kubernetes Pods
+- YAML Manifests
+- kubectl Workflow
 - Labels
 - Annotations
+- Namespaces
+- Scheduler
+- Worker Nodes
+- Control Plane
+- JSONPath
+- Port Forwarding
+- Container Logs
+- Interactive Container Access
 - Resource Requests
 - Resource Limits
-- Environment Variables
-- kubectl commands
+ ---
 
-Author: Babajide Ajisafe
+# Skills Demonstrated
+
+- Kubernetes Administration
+- Linux CLI
+- YAML Authoring
+- Troubleshooting
+- Resource Inspection
+- Cluster Navigation
+- Networking Fundamentals
+- Namespace Isolation
+- Container Debugging
+- Infrastructure Documentation
+
+---
+
+# Lessons Learned
+
+This lab reinforced the importance of using `kubectl` as the primary interface for interacting with Kubernetes clusters.
+
+I gained practical experience deploying, inspecting, troubleshooting, and managing workloads while developing a deeper understanding of Kubernetes scheduling, networking, namespaces, labels, and resource management.
+
+Completing these exercises on my own High Availability home lab strengthened my confidence in performing real-world Kubernetes administrative tasks.
+
+---
+
+# Author
+
+**Designed & Prepared by**
+
+**Babajide Ajisafe**
+
+© 2026 All Rights Reserved. 
