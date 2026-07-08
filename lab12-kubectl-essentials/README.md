@@ -1,3 +1,18 @@
+# Kubernetes Lab 12 – kubectl Essentials
+
+A hands-on Kubernetes lab focused on mastering the core `kubectl` commands used by Kubernetes Administrators, DevOps Engineers, and Site Reliability Engineers (SREs).
+
+---
+
+# Project Overview
+
+This lab demonstrates the practical use of **kubectl**, Kubernetes' primary command-line interface, for managing workloads inside a Kubernetes cluster.
+
+The exercises cover the complete lifecycle of a Pod—from creation and inspection to debugging, networking, namespaces, labels, annotations, and cleanup.
+
+The lab was completed on a self-hosted **High Availability Kubernetes Cluster** running inside my Proxmox home lab.
+
+
 # Objectives
 
 - Deploy a Pod using a YAML manifest
@@ -29,7 +44,7 @@ kubectl get pods
 
 ### Screenshot
 
-![Pod Created](screenshots/01-pod-created.png)
+![Pod Created](screenshots-lab12/01-pod-created.jpg)
 
 
 ## 2. Watching Pod Creation
