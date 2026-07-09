@@ -122,10 +122,10 @@ kubectl logs sample-nginx --since=5m
 ![Pod Logs](screenshots-lab12/04-generated-pod-yaml.jpg)
 
 **Kubectl Explain**
-![Pod Logs](Screenshots-lab12/04-kubectl-explain-pod.jpg)
+![Pod Logs](screenshots-lab12/04-kubectl-explain-pod.jpg)
 
 **Worker Node Scheduling**
-![Pod Logs](Screenshots-lab12/04-worker-node-scheduling.jpg)
+![Pod Logs](screenshots-lab12/04-worker-node-scheduling.jpg)
 
 ## 8. Port Forwarding
 
