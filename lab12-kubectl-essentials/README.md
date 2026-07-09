@@ -59,7 +59,7 @@ Although my image was already cached, Kubernetes immediately transitioned to the
 
 ### Screenshot
 
-![Watching Pod Status](screenshots/02-watch-pod-running.png)
+![Watching Pod Status](screenshots-lab12/02-watch-pod-running.jpg)
 
 
 ## 3. Inspecting Resources
@@ -84,7 +84,7 @@ This command reveals:
 
 ### Screenshot
 
-![Describe Pod](screenshots/03-describe-pod.png)
+![Describe Pod](screenshots-lab12/03-describe-pod.jpg)
 
 
 ## 4. Understanding Scheduling
@@ -99,7 +99,7 @@ Notice the Pod was scheduled on **jide-worker3** instead of either control plane
 
 ### Screenshot
 
-![Worker Node Scheduling](screenshots/04-worker-node-scheduling.png)
+![Worker Node Scheduling](screenshots-lab12/04-worker-node-scheduling.jpg)
 
 
 ## 6. Viewing Logs
@@ -118,7 +118,7 @@ kubectl logs sample-nginx --since=5m
 
 ### Screenshot
 
-![Pod Logs](screenshots/05-pod-logs.png)
+![Pod Logs](screenshots-lab12/05-pod-logs.jpg)
 
 
 ## 8. Port Forwarding
@@ -131,11 +131,11 @@ Opened a browser and verified the default NGINX page.
 
 ### Terminal
 
-![Port Forward](screenshots/06-port-forwarding.png)
+![Port Forward](screenshots-lab12/06-port-forwarding.jpg)
 
 ### Browser
 
-![NGINX Browser](screenshots/07-nginx-browser.png)
+![NGINX Browser](screenshots-lab12/07-nginx-browser.jpg)
 
 
 ## 10. Working with Namespaces
@@ -150,7 +150,7 @@ Verified the namespace.
 
 ### Screenshot
 
-![Namespace Created](screenshots/08-create-namespace.png)
+![Namespace Created](screenshots-lab12/08-create-namespace.jpg)
 
 
 Applied the Pod to the namespace.
@@ -167,7 +167,7 @@ kubectl get pods -n lab12-practice
 
 ### Screenshot
 
-![Pod in Namespace](screenshots/09-pod-in-namespace.png)
+![Pod in Namespace](screenshots-lab12/09-pod-in-namespace.jpg)
 
 
 
@@ -181,11 +181,11 @@ kubectl get pods -l lab=12-kubectl
 
 ### Screenshot
 
-![Labels and Annotations](screenshots/10-labels-annotations.png)
+![Labels and Annotations](screenshots-lab12/10-labels-annotations.jpg)
 
 
 
-The following screenshots demonstrate each major milestone throughout the lab.
+The screenshots demonstrate each major milestone throughout the lab.
 
 ---
 
@@ -233,10 +233,7 @@ Completing these exercises on my own High Availability home lab strengthened my 
 
 ---
 
-# Author
-
-**Designed & Prepared by**
+# Author*
 
 **Babajide Ajisafe**
-
 © 2026 All Rights Reserved. 
