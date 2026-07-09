@@ -118,9 +118,10 @@ kubectl logs sample-nginx --since=5m
 
 ### Screenshots
 
+**Generated Pod**
 ![Pod Logs](screenshots-lab12/04-generated-pod-yaml.jpg)
 
-**Generated Pod**
+**Kubectl Explain**
 ![Pod Logs](Screenshots-lab12/04-kubectl-explain-pod.jpg)
 
 **Worker Node Scheduling**
@@ -185,7 +186,6 @@ kubectl get pods -l lab=12-kubectl
 ![Labels and Annotations](screenshots-lab12/10-labels-annotations.jpg)
 
 
-
 The screenshots demonstrate each major milestone throughout the lab.
 
 ---
@@ -234,7 +234,7 @@ Completing these exercises on my own High Availability home lab strengthened my 
 
 ---
 
-# Author*
+# Author
 
 **Babajide Ajisafe**
 © 2026 All Rights Reserved. 
