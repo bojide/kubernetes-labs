@@ -116,10 +116,15 @@ kubectl logs sample-nginx --tail=40
 kubectl logs sample-nginx --since=5m
 ```
 
-### Screenshot
+### Screenshots
 
-![Pod Logs](screenshots-lab12/05-pod-logs.jpg)
+![Pod Logs](screenshots-lab12/04-generated-pod-yaml.jpg)
 
+**Generated Pod**
+![Pod Logs](Screenshots-lab12/04-kubectl-explain-pod.jpg)
+
+**Worker Node Scheduling**
+![Pod Logs](Screenshots-lab12/04-worker-node-scheduling.jpg)
 
 ## 8. Port Forwarding
 
@@ -132,10 +137,6 @@ Opened a browser and verified the default NGINX page.
 ### Terminal
 
 ![Port Forward](screenshots-lab12/06-port-forwarding.jpg)
-
-### Browser
-
-![NGINX Browser](screenshots-lab12/07-nginx-browser.jpg)
 
 
 ## 10. Working with Namespaces
