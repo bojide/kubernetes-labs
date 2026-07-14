@@ -229,7 +229,7 @@ language: klingon
 
 ### Screenshot
 
-![Schema Validation](screenshots-lab13/09-schema-validation.jpg)
+![Schema Validation](screenshots-lab13/09-greetings-created.jpg)
 
 resulted in:
 
