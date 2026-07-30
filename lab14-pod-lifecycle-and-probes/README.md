@@ -159,8 +159,18 @@ kubectl describe pod probes-demo (result below)
 - Kubernetes Event Analysis
 - Pod Status Inspection
 
- Author: 
-**Babajide Ajisafe** 
-- GitHub: https://github.com/bojide 
-- LinkedIn: https://linkedin.com/in/babajide-ajisafe
+# Created By
 
+## Babajide Ajisafe
+
+Cloud | DevOps | Kubernetes
+
+GitHub:
+https://github.com/bojide
+
+LinkedIn:
+https://linkedin.com/in/babajide-ajisafe
+
+---
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using Kubernetes, Docker, Terraform, AWS, and modern DevOps practices.
