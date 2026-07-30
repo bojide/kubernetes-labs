@@ -234,9 +234,16 @@ By completing this lab, I successfully:
 
 # Created By
 
-**Babajide Ajisafe**
+## Babajide Ajisafe
+
 Cloud | DevOps | Kubernetes
 
-GitHub: https://github.com/bojide Linkedin: https://linkedin.com/in/babajide-ajisafe
+GitHub:
+https://github.com/bojide
 
-Passionate about designing, automating, and managing scalable cloud-native infrastructure using modern DevOps and Kubernetes technologies.
+LinkedIn:
+https://linkedin.com/in/babajide-ajisafe
+
+---
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using Kubernetes, Docker, Terraform, AWS, and modern DevOps practices.
