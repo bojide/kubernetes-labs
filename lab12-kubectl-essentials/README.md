@@ -237,7 +237,18 @@ Completing these exercises on my own High Availability home lab strengthened my 
 
 ---
 
-# Author
+# Created By
 
-**Babajide Ajisafe**
-© 2026 All Rights Reserved. 
+## Babajide Ajisafe
+
+Cloud | DevOps | Kubernetes
+
+GitHub:
+https://github.com/bojide
+
+LinkedIn:
+https://linkedin.com/in/babajide-ajisafe
+
+---
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using Kubernetes, Docker, Terraform, AWS, and modern DevOps practices. 
