@@ -295,10 +295,18 @@ Kubernetes API Extension
 # Outcome
 Successfully deployed and managed labeled Pods, created a Custom Resource Definition (CRD), created multiple Greeting custom resources, validated schema enforcement, and used selectors across both native and custom Kubernetes objects.
 
-Created By:
+# Created By
 
-**Babajide Ajisafe** Cloud | DevOps | Kubernetes Engineer
+## Babajide Ajisafe
 
-GitHub: https://github.com/bojide Linkedin: https://linkedin.com/in/babajide-ajisafe
+Cloud | DevOps | Kubernetes
 
-Passionate about designing, automating, and managing scalable cloud-native infrastructure using modern DevOps and Kubernetes technologies.
+GitHub:
+https://github.com/bojide
+
+LinkedIn:
+https://linkedin.com/in/babajide-ajisafe
+
+---
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using Kubernetes, Docker, Terraform, AWS, and modern DevOps practices.
