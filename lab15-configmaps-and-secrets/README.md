@@ -1,277 +1,190 @@
-# Lab 15 — ConfigMaps, Secrets & the Downward API
+# Lab 15 – ConfigMaps, Secrets, and the Downward API
 
 ## Overview
 
-In this lab, I explored how Kubernetes separates application configuration from container images using **ConfigMaps**, **Secrets**, and the **Downward API**.
+This lab demonstrates how Kubernetes manages application configuration and sensitive information using **ConfigMaps** and **Secrets**, and how the **Downward API** exposes Pod metadata to running containers.
 
-I learned how applications can consume configuration as environment variables or mounted files, how Kubernetes stores Secret data internally, and how the Downward API exposes Pod metadata to running containers.
+During this lab I:
 
----
-
-## Objectives
-
-- Create a dedicated Kubernetes namespace
-- Create and inspect ConfigMaps
-- Create and inspect Secrets
-- Understand `stringData` vs `data`
-- Inject ConfigMap values as environment variables
-- Inject Secret values as environment variables
-- Mount ConfigMaps as files
-- Mount Secrets as files
-- Expose Pod metadata using the Downward API
-- Observe how ConfigMap updates affect mounted volumes versus environment variables
+- Created a dedicated namespace
+- Created and inspected a ConfigMap
+- Created and verified a Secret
+- Injected configuration as environment variables
+- Mounted ConfigMaps and Secrets as files
+- Used the Downward API to expose Pod metadata
+- Verified mounted files and environment variables inside running Pods
 
 ---
 
-# Lab Architecture
+# Prerequisites
 
-```
-Namespace
-│
-├── ConfigMap
-│     ├── Environment Variables
-│     └── Mounted Files
-│
-├── Secret
-│     ├── Environment Variables
-│     └── Mounted Files
-│
-└── Pod Metadata
-      └── Downward API
+- Kubernetes cluster
+- kubectl configured
+- Namespace isolation
+
+---
+
+# Step 1 — Create Namespace
+
+Created a dedicated namespace for the lab.
+
+```bash
+kubectl create namespace cm-secrets-lab
+kubectl get namespace cm-secrets-lab
 ```
 
----
-
-# Technologies Used
-
-- Kubernetes
-- kubectl
-- YAML
-- ConfigMap
-- Secret
-- Downward API
-- Linux Shell
+![Namespace Created](screenshots-lab15/lab15-01-namespace-created.jpg)
 
 ---
 
-# Project Files
+# Step 2 — Create ConfigMap
 
-```
-lab15-configmaps-and-secrets/
-│
-├── 01-configmap.yaml
-├── 02-secret.yaml
-├── 03-pod-env-injection.yaml
-├── 04-pod-volume-mount.yaml
-├── 05-downwardapi.yaml
-├── README.md
-└── images/
+Applied the ConfigMap manifest containing application configuration.
+
+```bash
+kubectl apply -f 01-configmap.yaml
 ```
 
+Verified the ConfigMap.
+
+![ConfigMap Created](screenshots-lab15/lab15-02-configmap-created.jpg)
+
 ---
 
-# What I Learned
+# Step 3 — Create Secret
+
+Applied the Secret manifest.
+
+```bash
+kubectl apply -f 02-secret.yaml
+```
+
+![Secret Created](screenshots-lab15/lab15-03-secret-created.jpg)
+
+---
+
+## Verify Kubernetes Base64 Encoding
+
+Retrieved the Secret to verify that Kubernetes stores Secret data in the **data** field using Base64 encoding.
+
+![Secret stringData to data](screenshots-lab15/lab15-04-secret-stringdata-to-data.jpg)
+
+---
+
+# Step 4 — Environment Variable Injection
+
+Created a Pod that imports ConfigMap and Secret values as environment variables.
+
+```bash
+kubectl apply -f 03-pod-env-injection.yaml
+```
+
+![Environment Injection Pod Created](screenshots-lab15/lab15-05-env-injection-pod-created.jpg)
+
+Verified the Pod reached the Running state.
+
+![Environment Injection Pod Running](screenshots-lab15/lab15-05-env-injection-pod-running.jpg)
+
+Entered the running container.
+
+```bash
+kubectl exec -it env-injection-pod -n cm-secrets-lab -- sh
+```
+
+![Enter Container](screenshots-lab15/lab15-06-enter-container.jpg)
+
+Verified that ConfigMap values were injected successfully.
+
+![ConfigMap Files](screenshots-lab15/lab15-07-configmap-files.jpg)
+
+Verified the LOG_LEVEL value.
+
+![LOG_LEVEL](screenshots-lab15/lab15-08-log-level.jpg)
+
+---
+
+# Step 5 — Volume Mounts
+
+Created a Pod that mounts ConfigMaps and Secrets as files.
+
+```bash
+kubectl apply -f 04-pod-volume-mount.yaml
+```
+
+Verified the Pod reached the Running state.
+
+![Volume Mount Pod Running](screenshots-lab15/lab15-08-volume-mount-pod-running.jpg)
+
+Verified the mounted **app.properties** file.
+
+![Application Properties](screenshots-lab15/lab15-09-app-properties.jpg)
+
+Verified mounted Secret files.
+
+![Secret Files](screenshots-lab15/lab15-10-secret-files.jpg)
+
+Verified Secret volume symbolic links and permissions.
+
+![Secret Volume](screenshots-lab15/lab15-11-secret-volume.jpg)
+
+---
+
+# Step 6 — Downward API
+
+Verified Pod metadata exposed through the Downward API.
+
+Checked:
+
+- Pod name
+- Namespace
+- Labels
+- Memory limit
+
+![Downward API](screenshots-lab15/lab15-11-downward-api.jpg)
+
+---
+
+# Step 7 — Exit the Pod
+
+Exited the running container after completing verification.
+
+![Exit Pod](screenshots-lab15/lab15-12-exit-pod.jpg)
+
+---
+
+# Key Concepts Learned
 
 ## ConfigMaps
 
-ConfigMaps allow application configuration to be stored separately from container images.
-
-In this lab I learned how to:
-
-- Store configuration as key-value pairs
-- Store complete configuration files
-- Inject configuration into Pods
-- Mount configuration as files
-
----
+- Store non-sensitive configuration
+- Can be consumed as environment variables
+- Can also be mounted as files
 
 ## Secrets
 
-Secrets store sensitive information such as:
-
-- Database usernames
-- Passwords
-- Connection strings
-- API keys
-
-I also learned the difference between:
-
-### stringData
-
-- Human-readable
-- Used only when creating a Secret
-- Kubernetes automatically converts it
-
-### data
-
-- Stored by Kubernetes
-- Base64 encoded
-- Returned whenever the Secret is retrieved
-
-Although Secret values are Base64 encoded, this is **encoding—not encryption**.
-
----
-
-## Environment Variable Injection
-
-The first Pod demonstrated two methods of injecting configuration.
-
-### envFrom
-
-Imports every key from a ConfigMap or Secret.
-
-Example:
-
-```
-LOG_LEVEL
-APP_ENV
-DB_HOST
-DB_PORT
-DB_USER
-DB_PASSWORD
-```
-
-### valueFrom
-
-Imports only selected keys.
-
-Example:
-
-```
-LOGGING_LEVEL
-DATABASE_PASSWORD
-```
-
-This approach gives much finer control over which values are exposed to the application.
-
----
-
-## Mounted ConfigMap Files
-
-Instead of environment variables, ConfigMaps can also be mounted as files.
-
-Example:
-
-```
-/etc/config/
-
-APP_ENV
-DB_HOST
-DB_PORT
-LOG_LEVEL
-app.properties
-```
-
-Applications can simply read these files during runtime.
-
----
-
-## Mounted Secret Files
-
-Secrets were also mounted as files.
-
-Example:
-
-```
-/etc/secret/
-
-DB_USER
-DB_PASSWORD
-DB_URL
-```
-
-Inside the container, Kubernetes automatically decoded the Base64 values before presenting them to the application.
-
----
+- Store sensitive information
+- Kubernetes stores them Base64 encoded
+- Mounted files are automatically decoded inside the Pod
 
 ## Downward API
 
-The Downward API allows Kubernetes to expose Pod metadata to running containers without modifying the application.
+Allows applications running inside a Pod to discover:
 
-Example files:
+- Pod name
+- Namespace
+- Labels
+- Resource limits
 
-```
-/etc/podinfo/
-
-pod-name
-namespace
-labels
-annotations
-mem-limit
-```
-
-This allows applications to discover information about themselves while running.
+without hardcoding those values.
 
 ---
 
-# Live Update Behavior
+# Files Included
 
-One of the most important concepts demonstrated in this lab is how Kubernetes handles configuration updates.
-
-## Mounted ConfigMap
-
-When the ConfigMap changes:
-
-- Mounted files update automatically
-- Changes become visible after the kubelet synchronization interval
-
-## Environment Variables
-
-Environment variables do **not** update.
-
-They are loaded only when the Pod starts.
-
-Updating the ConfigMap requires recreating or restarting the Pod before new values become available.
-
----
-
-# Key Takeaways
-
-- ConfigMaps separate configuration from application code.
-- Secrets manage sensitive configuration.
-- `stringData` is write-only.
-- Kubernetes stores Secret values in the `data` field.
-- Secret values are Base64 encoded.
-- Mounted ConfigMaps update automatically.
-- Environment variables do not update after Pod creation.
-- The Downward API exposes Pod metadata without hardcoding values.
-
----
-
-# Screenshots
-
-## Namespace
-
-- lab15-01-create-namespace.jpg
-- lab15-02-verify-namespace.jpg
-
-## ConfigMap
-
-- lab15-03-configmap-created.jpg
-- lab15-04-configmap-description.jpg
-
-## Secret
-
-- lab15-05-secret-created.jpg
-
-## Environment Variables
-
-- lab15-06-enter-container.jpg
-- lab15-07-environment-variables.jpg
-
-## Volume Mounts
-
-- lab15-08-configmap-files.jpg
-- lab15-09-configmap-properties.jpg
-- lab15-10-secret-files.jpg
-
-## Downward API
-
-- lab15-11-downward-api.jpg
-
-## Exit
-
-- lab15-12-exit-container.jpg
+- 01-configmap.yaml
+- 02-secret.yaml
+- 03-pod-env-injection.yaml
+- 04-pod-volume-mount.yaml
 
 ---
 
@@ -281,25 +194,49 @@ Updating the ConfigMap requires recreating or restarting the Pod before new valu
 kubectl delete namespace cm-secrets-lab
 ```
 
-Verify:
-
-```bash
-kubectl get namespaces
-```
-
-The namespace **cm-secrets-lab** should no longer exist.
-
 ---
 
 # Skills Demonstrated
 
-- Kubernetes
-- ConfigMaps
-- Secrets
-- Downward API
-- Environment Variables
+- Kubernetes ConfigMaps
+- Kubernetes Secrets
+- Environment Variable Injection
 - Volume Mounts
-- YAML
-- Linux CLI
+- Secret Management
+- Downward API
+- Pod Metadata
 - kubectl
-- Troubleshooting
+- YAML
+
+# Outcome
+
+By completing this lab, I successfully:
+
+- Created and managed Kubernetes ConfigMaps for application configuration.
+- Created Secrets and verified how Kubernetes stores them using Base64 encoding.
+- Injected ConfigMap and Secret values into Pods as environment variables.
+- Mounted ConfigMaps and Secrets as files inside running Pods.
+- Used the Downward API to expose Pod metadata to applications.
+- Verified the differences between environment variable injection and volume-mounted configuration.
+- Gained practical experience managing application configuration using Kubernetes best practices.
+
+# Outcome
+
+By completing this lab, I successfully:
+
+- Created and managed Kubernetes ConfigMaps for application configuration.
+- Created Secrets and verified how Kubernetes stores them using Base64 encoding.
+- Injected ConfigMap and Secret values into Pods as environment variables.
+- Mounted ConfigMaps and Secrets as files inside running Pods.
+- Used the Downward API to expose Pod metadata to applications.
+- Verified the differences between environment variable injection and volume-mounted configuration.
+- Gained practical experience managing application configuration using Kubernetes best practices.
+
+# Created By
+
+**Babajide Ajisafe**
+Cloud | DevOps | Kubernetes
+
+GitHub: https://github.com/bojide Linkedin: https://linkedin.com/in/babajide-ajisafe
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using modern DevOps and Kubernetes technologies.
