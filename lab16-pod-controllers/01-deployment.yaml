@@ -1,0 +1,77 @@
+# ============================================================
+# Lab 16 — Pod Controllers
+# File 01: Deployment
+# ============================================================
+# A Deployment manages a ReplicaSet, which manages Pods.
+# The Deployment controller reconciles desired state (spec.replicas)
+# with actual state, and handles rolling updates and rollbacks.
+#
+# Apply:
+#   kubectl apply -f 01-deployment.yaml
+# ============================================================
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: web-app
+  namespace: controllers-lab
+  labels:
+    lab: "16-pod-controllers"
+  annotations:
+    kubernetes.io/change-cause: "initial deploy — nginx 1.25"
+
+spec:
+  # --- Replica count ------------------------------------------
+  replicas: 3
+
+  # --- Pod selection ------------------------------------------
+  # The Deployment uses this selector to identify the Pods it owns.
+  # This must match the Pod template labels below.
+  selector:
+    matchLabels:
+      app: web-app
+
+  # --- Update strategy ----------------------------------------
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Allows one extra Pod above the desired replica count
+      # during a rolling update.
+      maxSurge: 1
+
+      # Keeps all 3 desired Pods available during the update.
+      maxUnavailable: 0
+
+  # --- Pod template -------------------------------------------
+  # Blueprint used to create the Pods.
+  template:
+    metadata:
+      labels:
+        app: web-app
+        version: "1.25"
+
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25-alpine
+
+          ports:
+            - containerPort: 80
+              name: http
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+
+          # Pod is considered ready only when this probe succeeds.
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5

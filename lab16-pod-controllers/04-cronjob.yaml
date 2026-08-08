@@ -1,0 +1,63 @@
+# ============================================================
+# Lab 16 — Pod Controllers
+# File 04: CronJob
+# ============================================================
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: timestamp-logger
+  namespace: controllers-lab
+  labels:
+    lab: "16-pod-controllers"
+
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: 60
+  suspend: false
+
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 600
+
+      template:
+        metadata:
+          labels:
+            app: timestamp-logger
+
+        spec:
+          restartPolicy: OnFailure
+
+          containers:
+            - name: logger
+              image: busybox:1.36
+
+              command:
+                - sh
+                - -c
+
+              args:
+                - |
+                  echo "========================================="
+                  echo "CronJob run at: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+                  echo "Pod name: $(hostname)"
+                  echo "Namespace: ${POD_NAMESPACE:-unknown}"
+                  echo "========================================="
+
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+
+              resources:
+                requests:
+                  cpu: "50m"
+                  memory: "16Mi"
+                limits:
+                  cpu: "100m"
+                  memory: "32Mi"
