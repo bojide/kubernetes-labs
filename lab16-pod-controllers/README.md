@@ -1076,4 +1076,18 @@ Together, these exercises demonstrate an important Kubernetes principle:
 
 ---
 
-**Designed & Authored by Babajide Ajisafe © 2026**
+# Created
+
+## Babajide Ajisafe
+
+Cloud | DevOps | Kubernetes
+
+GitHub:
+https://github.com/bojide
+
+LinkedIn:
+https://linkedin.com/in/babajide-ajisafe
+
+---
+
+Passionate about designing, automating, and managing scalable cloud-native infrastructure using Kubernetes, Docker, Terraform, AWS, and modern DevOps practices.
