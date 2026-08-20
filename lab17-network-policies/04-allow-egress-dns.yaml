@@ -1,0 +1,55 @@
+# ============================================================
+# Lab 17 — Kubernetes Network Policies
+# File: 04-allow-egress-dns.yaml
+# Purpose: Restore DNS resolution while default-deny remains.
+# ============================================================
+#
+# The default-deny-all policy blocks EGRESS traffic.
+# That includes DNS queries from Pods to the cluster DNS
+# service.
+#
+# Without DNS, service names such as:
+#
+#   backend-svc
+#
+# cannot be translated into an IP address.
+#
+# DNS normally uses:
+#
+#   UDP port 53  -> standard DNS queries
+#   TCP port 53  -> larger responses / fallback
+#
+# This policy permits DNS traffic on both protocols.
+#
+# IMPORTANT:
+# This does NOT reopen general outbound traffic.
+# Other egress traffic is still controlled by the existing
+# NetworkPolicies.
+# ============================================================
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+
+metadata:
+  name: allow-egress-dns
+  namespace: netpol-lab
+
+spec:
+
+  # Apply this DNS permission to every Pod in the namespace.
+  podSelector: {}
+
+  policyTypes:
+    - Egress
+
+  egress:
+
+    # Allow standard DNS queries over UDP port 53.
+    - ports:
+        - protocol: UDP
+          port: 53
+
+    # Allow DNS over TCP port 53 when required.
+    - ports:
+        - protocol: TCP
+          port: 53

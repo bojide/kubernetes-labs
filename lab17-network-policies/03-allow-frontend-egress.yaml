@@ -1,0 +1,77 @@
+# ============================================================
+# Lab 17 — Kubernetes Network Policies
+# File: 03-allow-frontend-egress.yaml
+# Purpose: Allow frontend Pods to send traffic to backend Pods
+#          on TCP port 8080.
+# ============================================================
+#
+# The default-deny-all policy is still active.
+#
+# We already created an INGRESS exception on the backend:
+#
+#   frontend ─────────────► backend:8080
+#                  backend accepts it
+#
+# But the frontend is still isolated for EGRESS.
+#
+# This policy gives the frontend permission to LEAVE toward
+# backend Pods on TCP port 8080.
+#
+# IMPORTANT:
+# DNS is still blocked.
+#
+# Therefore:
+#
+#   Direct backend Pod IP :8080   -> should work
+#   backend-svc:8080             -> may still fail because
+#                                   DNS cannot resolve the name
+#
+# This lets us prove that application traffic and DNS traffic
+# are separate networking requirements.
+# ============================================================
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+
+metadata:
+  name: allow-frontend-egress
+  namespace: netpol-lab
+
+spec:
+
+  # ----------------------------------------------------------
+  # Which source Pods does this policy apply to?
+  # ----------------------------------------------------------
+  # Only Pods carrying:
+  #
+  #   role: frontend
+  #
+  podSelector:
+    matchLabels:
+      role: frontend
+
+  # This policy controls traffic LEAVING the frontend.
+  policyTypes:
+    - Egress
+
+  egress:
+
+    # --------------------------------------------------------
+    # Where may the frontend go?
+    # --------------------------------------------------------
+    # Only to Pods carrying:
+    #
+    #   app: backend
+    #
+    - to:
+        - podSelector:
+            matchLabels:
+              app: backend
+
+      # ------------------------------------------------------
+      # Which destination port may it use?
+      # ------------------------------------------------------
+      # Only TCP port 8080.
+      ports:
+        - protocol: TCP
+          port: 8080

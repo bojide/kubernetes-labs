@@ -1,0 +1,79 @@
+# ============================================================
+# Lab 17 — Kubernetes Network Policies
+# File: 02-allow-frontend-to-backend.yaml
+# Purpose: Allow only frontend Pods to reach backend Pods
+#          on TCP port 8080.
+# ============================================================
+#
+# The default-deny-all policy is still active.
+#
+# This policy creates one exception:
+#
+#   Pods with role=frontend
+#              │
+#              ▼
+#   Pods with app=backend
+#              │
+#              ▼
+#          TCP port 8080
+#
+# The attacker Pod does NOT have role=frontend,
+# so it is not included in this allow rule.
+#
+# IMPORTANT:
+# This policy only controls INGRESS into the backend.
+# The frontend's EGRESS is still blocked by default-deny-all.
+# We will address that in a later policy.
+# ============================================================
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+
+metadata:
+  name: allow-frontend-to-backend
+  namespace: netpol-lab
+
+spec:
+
+  # ----------------------------------------------------------
+  # Which destination Pods does this policy protect?
+  # ----------------------------------------------------------
+  # Select all Pods labeled:
+  #
+  #   app: backend
+  #
+  # Think of this as putting the security rule on the
+  # BACKEND door.
+  #
+  podSelector:
+    matchLabels:
+      app: backend
+
+  # This policy only defines allowed traffic coming INTO
+  # the selected backend Pods.
+  policyTypes:
+    - Ingress
+
+  ingress:
+
+    # --------------------------------------------------------
+    # Who is allowed to enter?
+    # --------------------------------------------------------
+    # Only Pods in this namespace carrying:
+    #
+    #   role: frontend
+    #
+    - from:
+        - podSelector:
+            matchLabels:
+              role: frontend
+
+      # ------------------------------------------------------
+      # Which destination port may they use?
+      # ------------------------------------------------------
+      # Even trusted frontend Pods may only connect to
+      # TCP port 8080 on the backend.
+      #
+      ports:
+        - protocol: TCP
+          port: 8080

@@ -1,0 +1,222 @@
+# ============================================================
+# Lab 17 — Kubernetes Network Policies
+# File: 00-setup.yaml
+# Purpose: Build the isolated lab environment
+# ============================================================
+#
+# This manifest creates:
+#   1. Namespace: netpol-lab
+#   2. Backend Deployment: 2 nginx pods
+#   3. Backend Service: backend-svc
+#   4. Frontend Deployment: 1 curl-capable pod
+#   5. Attacker Deployment: 1 curl-capable pod
+#
+# At this stage, NO NetworkPolicy exists.
+# Therefore, traffic should be allowed by default.
+#
+# We will first prove that:
+#
+#   Frontend ─────────────► Backend :8080   ALLOWED
+#   Attacker ─────────────► Backend :8080   ALLOWED
+#
+# Later policies will progressively restrict this traffic.
+# ============================================================
+
+
+# ------------------------------------------------------------
+# 1. Namespace
+# ------------------------------------------------------------
+# All Lab 17 resources live inside a dedicated namespace.
+# This keeps the experiment isolated from other workloads.
+#
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: netpol-lab
+  labels:
+    kubernetes.io/metadata.name: netpol-lab
+
+---
+
+# ------------------------------------------------------------
+# 2. Backend Deployment
+# ------------------------------------------------------------
+# This Deployment represents the backend tier of our
+# application.
+#
+# Two nginx replicas are created.
+#
+# IMPORTANT:
+# NetworkPolicies select Pods using LABELS — not Deployment
+# names. The label "app: backend" will therefore become
+# important when we create our allow rules.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: netpol-lab
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+        role: backend
+
+    spec:
+      containers:
+        - name: backend
+          image: nginx:1.25-alpine
+
+          ports:
+            - containerPort: 8080
+
+          # nginx normally listens on TCP port 80.
+          # For this lab, change it to port 8080 so we can
+          # explicitly control TCP/8080 using NetworkPolicy.
+          command:
+            - /bin/sh
+            - -c
+
+          args:
+            - |
+              sed -i 's/listen\s*80;/listen 8080;/g' /etc/nginx/conf.d/default.conf && \
+              nginx -g 'daemon off;'
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+
+---
+
+# ------------------------------------------------------------
+# 3. Backend Service
+# ------------------------------------------------------------
+# A ClusterIP Service provides a stable DNS name for the
+# backend Pods.
+#
+# Other Pods can reach the backend using:
+#
+#   http://backend-svc:8080
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: netpol-lab
+
+spec:
+  selector:
+    app: backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+
+# ------------------------------------------------------------
+# 4. Frontend Deployment
+# ------------------------------------------------------------
+# This Pod represents a trusted frontend application that
+# legitimately needs to communicate with the backend.
+#
+# curlimages/curl gives us curl for connectivity testing.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: netpol-lab
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: frontend
+
+  template:
+    metadata:
+      labels:
+        app: frontend
+        role: frontend
+
+    spec:
+      containers:
+        - name: frontend
+          image: curlimages/curl:8.5.0
+
+          # Keep the container alive so that we can execute
+          # connectivity tests from inside it.
+          command:
+            - sleep
+            - infinity
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+
+---
+
+# ------------------------------------------------------------
+# 5. Attacker Deployment
+# ------------------------------------------------------------
+# This Pod represents an untrusted workload.
+#
+# Initially it WILL be able to reach the backend because no
+# NetworkPolicy has been applied.
+#
+# Later, our allow rules will permit the frontend while this
+# attacker remains blocked.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attacker
+  namespace: netpol-lab
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: attacker
+
+  template:
+    metadata:
+      labels:
+        app: attacker
+
+    spec:
+      containers:
+        - name: attacker
+          image: curlimages/curl:8.5.0
+
+          command:
+            - sleep
+            - infinity
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"

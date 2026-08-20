@@ -1,0 +1,42 @@
+# ============================================================
+# Lab 17 — Kubernetes Network Policies
+# File: 01-default-deny-all.yaml
+# Purpose: Deny all ingress and egress traffic
+# ============================================================
+#
+# This policy establishes a default-deny security posture.
+#
+# podSelector: {}
+#   Selects EVERY Pod in the netpol-lab namespace.
+#
+# policyTypes:
+#   Ingress = traffic entering selected Pods
+#   Egress  = traffic leaving selected Pods
+#
+# Because no ingress or egress allow-rules are defined,
+# all traffic in both directions is denied.
+# ============================================================
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+
+metadata:
+  name: default-deny-all
+  namespace: netpol-lab
+
+spec:
+
+  # Empty selector = every Pod in this namespace.
+  podSelector: {}
+
+  # Control both directions of traffic.
+  policyTypes:
+    - Ingress
+    - Egress
+
+  # No ingress rules.
+  # No egress rules.
+  #
+  # Result:
+  #   DENY ALL INGRESS
+  #   DENY ALL EGRESS
