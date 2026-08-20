@@ -694,15 +694,19 @@ Expected:
 ```text
 Error from server (NotFound): namespaces "netpol-lab" not found
 ```
-
 ---
 
-## Author
+# Created
 
-**Created By:** Babajide Ajisafe — Cloud | DevOps | Kubernetes
+## Babajide Ajisafe
 
-**GitHub:** https://github.com/bojide
-**LinkedIn:** https://linkedin.com/in/babajide-ajisafe
+Cloud | DevOps | Kubernetes
 
-**Learning by building | Testing by breaking | Understanding by verifying**
+GitHub:
+https://github.com/bojide
+
+LinkedIn:
+https://linkedin.com/in/babajide-ajisafe
+
+---
 
