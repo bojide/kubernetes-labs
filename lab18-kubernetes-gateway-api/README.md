@@ -1148,25 +1148,4 @@ https://linkedin.com/in/babajide-ajisafe
 ---
 
 Passionate about designing, automating, and managing scalable cloud-native infrastructure using Kubernetes, Docker, Terraform, AWS, and modern DevOps practices.
-Important before you save
-
-This version uses exactly the screenshot filenames you showed me, and each one is deliberately positioned with the result it documents:
-
-01 Istio running → Istio setup
-02 Gateway programmed → Gateway verification
-03 Accepted/ResolvedRefs → HTTPRoute verification
-04 API/frontend responses → path-routing test
-05 90/10 → first canary stage
-06 50/50 → second canary stage
-07 100% v2 → promotion
-08 final resources → final verification
-
-Created
-Babajide Ajisafe
-Cloud | DevOps | Kubernetes
-
-GitHub: https://github.com/bojide
-
-LinkedIn: https://linkedin.com/in/babajide-ajisafe
-
 
