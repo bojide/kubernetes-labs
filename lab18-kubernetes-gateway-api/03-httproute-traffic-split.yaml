@@ -1,0 +1,139 @@
+# ============================================================
+# Lab 18 — Gateway API: Step 3 — Traffic Splitting (Canary)
+# ============================================================
+# Traffic to /app is split:
+#   90% -> v1 stable
+#   10% -> v2 canary
+# ============================================================
+
+# --- Stable v1 Deployment -----------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-v1
+  namespace: gateway-lab
+  labels:
+    app: app
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: app
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: hashicorp/http-echo:latest
+          args:
+            - "-text=v1 — stable release"
+            - "-listen=:8080"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+
+---
+# --- Stable v1 Service --------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-v1-svc
+  namespace: gateway-lab
+spec:
+  selector:
+    app: app
+    version: v1
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+---
+# --- Canary v2 Deployment -----------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-v2
+  namespace: gateway-lab
+  labels:
+    app: app
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: app
+        version: v2
+    spec:
+      containers:
+        - name: app
+          image: hashicorp/http-echo:latest
+          args:
+            - "-text=v2 — canary release"
+            - "-listen=:8080"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+
+---
+# --- Canary v2 Service --------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-v2-svc
+  namespace: gateway-lab
+spec:
+  selector:
+    app: app
+    version: v2
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+---
+# --- HTTPRoute: 90/10 traffic split -------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: canary-route
+  namespace: gateway-lab
+  annotations:
+    canary.stage: "initial-10-percent"
+spec:
+  parentRefs:
+    - name: shared-gateway
+      namespace: gateway-lab
+      sectionName: http
+
+  hostnames:
+    - "lab.example.com"
+
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /app
+
+      backendRefs:
+        - name: app-v1-svc
+          port: 8080
+          weight: 9
+
+        - name: app-v2-svc
+          port: 8080
+          weight: 1
