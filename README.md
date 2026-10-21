@@ -13,3 +13,4 @@ Hands-on Kubernetes labs covering Pods, Deployments, Services, ConfigMaps, Secre
 - [Lab 18 – Kubernetes Gateway API](./lab18-kubernetes-gateway-api/)
 - [Lab 19 – Kubernetes Platform Add-ons](./lab19-kubernetes-platform-addons/)
 - [Lab 20 – Persistent Storage](./lab20-persistent-storage/)
+- 
